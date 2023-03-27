@@ -5,7 +5,7 @@ import { z } from 'zod';
 import environment from '../core/environment';
 import { RabbitInstance } from '../external/rabbit/rabbit.instance';
 import { Job } from '../generated/client';
-import job from '../services/job.service';
+import jobService from '../services/job.service';
 
 const t = initTRPC.create();
 
@@ -24,17 +24,22 @@ const queueRouter = router({
       }),
     )
     .mutation(async ({ input }) => {
-      await job.submitJob({
+      await jobService.submitJob({
         dockerImage: input.dockerImage,
         discoverCommand: input.discoverCommand,
         startCommand: input.startCommand,
       });
     }),
+  getJobs: publicProcedure.query(async () => {
+    return jobService.getJobs();
+  }),
   watchJobs: publicProcedure.subscription(() => {
     return observable<JobEvent>((emit) => {
       const onWatch = (data: JobEvent) => {
         emit.next(data);
       };
+
+      console.log('Connecting to RabbitMQ...');
 
       const consumer = new RabbitInstance(environment.RABBITMQ_WS_EXCHANGE);
       consumer.subscribe('JOB.CREATE', (job: any) => onWatch({ type: 'create', job }));

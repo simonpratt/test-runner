@@ -4,6 +4,9 @@ import { prisma } from '../core/prisma.client';
 import { rabbitWSPublisher } from '../core/rabbit';
 
 export default {
+  async getJobs() {
+    return prisma.job.findMany();
+  },
   async submitJob(config: { dockerImage: string; discoverCommand: string; startCommand: string }) {
     const { dockerImage, discoverCommand, startCommand } = config;
 

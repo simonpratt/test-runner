@@ -1,4 +1,5 @@
 import { prisma } from '../core/prisma.client';
+import { rabbitWSPublisher } from '../core/rabbit';
 
 export default {
   async getNextCommand() {
@@ -9,7 +10,8 @@ export default {
     }
 
     // Claim and return
-    await prisma.command.update({ where: { id: next.id }, data: { status: 'RUNNING' } });
+    const updatedCommand = await prisma.command.update({ where: { id: next.id }, data: { status: 'RUNNING' } });
+    await rabbitWSPublisher.publish('COMMAND.UPDATE', updatedCommand);
     return {
       id: next.id,
       dockerImage: next.Job.dockerImage,
@@ -28,20 +30,43 @@ export default {
 
     const job = command.Job;
     const startCommand = job.startCommand;
-    await prisma.command.createMany({
-      data: tests.map((test) => ({
-        jobId: job.id,
-        type: 'TEST',
-        status: 'PENDING',
-        command: startCommand.replace('<spec>', test),
-      })),
-    });
+    // TODO: Need to bulk insert with pre-defined UUID's so we can bulk grab them again after for the queue publish
+    //       Doing this loop will be harsher on the DB
+    //       Probably only worth doing if there's a tangible impact
+    for (const test of tests) {
+      const command = await prisma.command.create({
+        data: {
+          jobId: job.id,
+          type: 'TEST',
+          status: 'PENDING',
+          command: startCommand.replace('<spec>', test),
+        },
+      });
+      await rabbitWSPublisher.publish('COMMAND.CREATE', command);
+    }
+
+    const updatedJob = await prisma.job.update({ where: { id: job.id }, data: { status: 'RUNNING' } });
+    await rabbitWSPublisher.publish('JOB.UPDATE', updatedJob);
   },
 
   async markCommandFinished(commandId: string) {
     console.log(`Processing finished command: ${commandId}`);
 
-    await prisma.command.update({ where: { id: commandId }, data: { status: 'FINISHED' } });
+    // Update the command to the finished status and publish the update
+    const updatedCommand = await prisma.command.update({ where: { id: commandId }, data: { status: 'FINISHED' } });
+    await rabbitWSPublisher.publish('COMMAND.UPDATE', updatedCommand);
+
+    // If all commands are finished, mark the job as finished
+    // TODO: Should the discovery command go elsewhere?
+    //       It will introduce race conditions here
+    const finishedCommandCount = await prisma.command.count({
+      where: { jobId: updatedCommand.jobId, status: 'FINISHED' },
+    });
+    const totalCommandCount = await prisma.command.count({ where: { jobId: updatedCommand.jobId } });
+    if (finishedCommandCount === totalCommandCount) {
+      const updatedJob = await prisma.job.update({ where: { id: updatedCommand.jobId }, data: { status: 'FINISHED' } });
+      await rabbitWSPublisher.publish('JOB.UPDATE', updatedJob);
+    }
   },
 
   async markCommandAborted(commandId: string) {

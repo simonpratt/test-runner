@@ -2,6 +2,7 @@ import React from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import App from './App';
+import JobsList from './components/jobs/JobsList';
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/queue',
-        element: <div>queue...</div>,
+        element: <JobsList />,
       },
     ],
   },

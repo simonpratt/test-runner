@@ -3,4 +3,5 @@ import { RootRouter } from 'universal-test-runner-api';
 
 type RouterOutput = inferRouterOutputs<RootRouter>;
 
-export type SubmitJob = RouterOutput['queue']['submitJob'];
+export type Job = RouterOutput['job']['getJobs'][0];
+export type Command = RouterOutput['command']['getCommands'][0];

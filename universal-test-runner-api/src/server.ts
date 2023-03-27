@@ -10,6 +10,7 @@ import ws from 'ws';
 import environment from './core/environment';
 import errors from './core/errors';
 import { configureExpressHealthCheck } from './core/healthcheck';
+import commandRouter from './routers/command.router';
 import jobRouter from './routers/job.router';
 import orchestratorRouter from './routers/orchestrator.router';
 import resultsRouter from './routers/results.router';
@@ -19,7 +20,8 @@ const t = initTRPC.create();
 const router = t.router;
 
 const rootRouter = router({
-  queue: jobRouter,
+  job: jobRouter,
+  command: commandRouter,
   orchestrator: orchestratorRouter,
   results: resultsRouter,
 });

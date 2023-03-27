@@ -16,7 +16,7 @@ export default {
   },
 
   async getContainerStatus(containerId: string) {
-    const { stdout, stderr } = await exec(`docker inspect  -f {{.State.Status}} ${containerId}`);
+    const { stdout, stderr } = await exec(`docker inspect -f {{.State.Status}} ${containerId}`);
     const status = stdout.trim();
     return status;
   },
