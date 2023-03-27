@@ -1,0 +1,49 @@
+{
+  "name": "universal-test-runner-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint 'src/**/*.{js,ts}'",
+    "start": "tsx watch -r dotenv/config src/index.ts",
+    "prebuild": "npx prisma generate",
+    "postbuild": "cp -r src/generated build",
+    "build": "tsc",
+    "nodemon": "nodemon",
+    "pretty": "prettier --write \"./src/**/*.{js,ts,json}\""
+  },
+  "dependencies": {
+    "@prisma/client": "^4.10.1",
+    "@trpc/server": "^10.9.0",
+    "@types/ws": "^8.5.4",
+    "amqplib": "^0.10.3",
+    "chalk": "^4.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "prisma": "^4.10.1",
+    "ws": "^8.13.0",
+    "zod": "^3.20.6"
+  },
+  "devDependencies": {
+    "@dtdot/eslint-config": "^0.0.8",
+    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
+    "@types/amqplib": "^0.10.1",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.16",
+    "@types/morgan": "^1.9.4",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.3",
+    "tsx": "^3.12.2",
+    "typescript": "^4.9.4"
+  },
+  "author": "",
+  "license": "ISC"
+}

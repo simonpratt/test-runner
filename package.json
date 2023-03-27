@@ -1,0 +1,15 @@
+{
+  "name": "universal-test-runner",
+  "scripts": {
+    "build-all": "npm run build --workspaces --if-present",
+    "install-all": "npm install --workspaces  --if-present",
+    "ci-all": "npm ci --workspaces  --if-present",
+    "ci-all-production": "npm ci --workspaces  --if-present --omit=dev",
+    "lint-all": "npm run lint --workspaces --if-present"
+  },
+  "workspaces": [
+    "universal-test-runner-api",
+    "universal-test-runner-orchestrator",
+    "universal-test-runner-client"
+  ]
+}

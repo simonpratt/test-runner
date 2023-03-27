@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/generated/client"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum JobStatus {
+  DISCOVERY
+  PENDING
+  RUNNING
+  FINISHED
+}
+
+enum CommandType {
+  DISCOVERY
+  TEST
+}
+
+enum CommandStatus {
+  PENDING
+  RUNNING
+  FINISHED
+  ABORTED
+}
+
+model Job {
+  id              String    @id @default(uuid())
+  dockerImage     String
+  discoverCommand String
+  startCommand    String
+  status          JobStatus
+  Command         Command[]
+}
+
+model Command {
+  id          String      @id @default(uuid())
+  type        CommandType
+  command     String
+  status      CommandStatus
+  Job         Job         @relation(fields: [jobId], references: [id])
+  jobId       String
+}
