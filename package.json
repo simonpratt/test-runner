@@ -3,6 +3,7 @@
   "author": "Simon Pratt (19920260+simonpratt@users.noreply.github.com)",
   "license": "MIT",
   "scripts": {
+    "setup": "npm run ci-all && npm run build --workspace=sample-container && docker build ./sample-container -t sample",
     "build-all": "npm run build --workspaces --if-present",
     "install-all": "npm install --workspaces  --if-present",
     "ci-all": "npm ci --workspaces  --if-present",
@@ -10,6 +11,7 @@
     "lint-all": "npm run lint --workspaces --if-present"
   },
   "workspaces": [
+    "sample-container",
     "universal-test-runner-api",
     "universal-test-runner-orchestrator",
     "universal-test-runner-client"
