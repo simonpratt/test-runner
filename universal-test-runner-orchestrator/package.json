@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "author": "Simon Pratt (19920260+simonpratt@users.noreply.github.com)",
+  "license": "MIT",
   "scripts": {
     "start": "tsx watch -r dotenv/config src/index.ts",
     "lint": "eslint 'src/**/*.{js,ts}'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@trpc/client": "^10.9.0",
     "axios": "^1.2.2",

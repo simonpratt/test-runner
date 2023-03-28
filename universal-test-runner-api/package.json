@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
+  "author": "Simon Pratt (19920260+simonpratt@users.noreply.github.com)",
+  "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint 'src/**/*.{js,ts}'",
@@ -43,7 +45,5 @@
     "prettier": "^2.8.3",
     "tsx": "^3.12.2",
     "typescript": "^4.9.4"
-  },
-  "author": "",
-  "license": "ISC"
+  }
 }
