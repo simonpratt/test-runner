@@ -9,7 +9,11 @@ export interface NewJobModalProps {
 }
 
 const NewJobModal = ({ onClose }: NewJobModalProps) => {
-  const [form, setForm] = React.useState({ dockerImage: '', startCommand: '', discoverCommand: '' });
+  const [form, setForm] = React.useState({
+    dockerImage: 'sample',
+    startCommand: 'node build/start.js',
+    selector: 'test1.js,test2.js,test3.js',
+  });
   const {
     mutate: submitJob,
     isLoading: submitJobLoading,
@@ -33,8 +37,8 @@ const NewJobModal = ({ onClose }: NewJobModalProps) => {
         <Form value={form} onChange={setForm} onSubmit={handleSubmit}>
           <ControlGroup variation='comfortable'>
             <Input name='dockerImage' label='Docker Image' placeholder='sample' />
-            <Input name='discoverCommand' label='Discovery Command' placeholder='node build/discover.ts' />
-            <Input name='startCommand' label='Start Command' placeholder='node build/start.js <spec>' />
+            <Input name='startCommand' label='Start Command' placeholder='node build/start.js' />
+            <Input name='selector' label='Selector' placeholder='test1.js,test2.js,test3.js' />
             <Button type='submit' loading={submitJobLoading}>
               Start
             </Button>

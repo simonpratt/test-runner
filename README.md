@@ -12,7 +12,8 @@ This project is made up of three main components
 
 To run locally
 1. Install [docker](https://docs.docker.com/install/)
-2. Install dependencies and build the sample docker image using `npm run setup`
-3. Copy the .env.example files in each of the sub-directories to .env and fill in the appropriate values
-4. Start all services using `npm start` in each of the subdirectories
-5. Navigate to `http://localhost:3000` and start a job using the placeholder values
+1. Copy the .env.example files in each of the sub-directories to .env and fill in the appropriate values
+1. Install dependencies and build the sample docker image using `npm run setup`
+1. Push the db schema using `npx prisma db push` within the `universal-test-runner-api` folder
+1. Start all services using `npm start` in each of the subdirectories
+1. Navigate to `http://localhost:3000` and start a job using the placeholder values

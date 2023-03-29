@@ -13,15 +13,9 @@ datasource db {
 }
 
 enum JobStatus {
-  DISCOVERY
   PENDING
   RUNNING
   FINISHED
-}
-
-enum CommandType {
-  DISCOVERY
-  TEST
 }
 
 enum CommandStatus {
@@ -34,17 +28,16 @@ enum CommandStatus {
 model Job {
   id              String    @id @default(uuid())
   dockerImage     String
-  discoverCommand String
   startCommand    String
+  selector        String
   status          JobStatus
   Command         Command[]
 }
 
 model Command {
-  id          String      @id @default(uuid())
-  type        CommandType
-  command     String
-  status      CommandStatus
-  Job         Job         @relation(fields: [jobId], references: [id])
-  jobId       String
+  id     String        @id @default(uuid())
+  spec   String
+  status CommandStatus
+  Job    Job           @relation(fields: [jobId], references: [id])
+  jobId  String
 }

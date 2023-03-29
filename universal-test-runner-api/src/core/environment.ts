@@ -6,6 +6,7 @@ const configSchema = z.object({
   SOCKET_PORT: z.coerce.number(),
   DATABASE_URL: z.string(),
   RABBITMQ_WS_EXCHANGE: z.string(),
+  RABBITMQ_JOB_EXCHANGE: z.string(),
 });
 
 const environment = configSchema.parse(process.env);

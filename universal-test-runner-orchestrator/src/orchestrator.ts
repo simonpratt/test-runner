@@ -1,5 +1,8 @@
+import { Command, Job } from 'universal-test-runner-api/src/generated/client';
+
 import { apiConnector } from './core/api.connector';
 import environment from './core/environment';
+import { RabbitInstance } from './external/rabbit/rabbit.instance';
 import containerManagerService from './services/containerManager.service';
 import dockerService from './services/docker.service';
 
@@ -13,26 +16,25 @@ export const stopOrchestrator = () => {
   running = false;
 };
 
+type CommandWithJob = Command & {
+  Job: Job;
+};
+
 const startWatchingForNewJobs = async () => {
-  while (running) {
-    if (containerManagerService.getRunningContainerCount() < environment.MAX_CONCURRENT_TASKS) {
-      const command = await apiConnector.orchestrator.getNextCommand.query();
+  const subscriber = new RabbitInstance(environment.RABBITMQ_JOB_EXCHANGE);
+  subscriber.subscribe('COMMAND.NEW', async (payload) => {
+    const command = payload as CommandWithJob;
 
-      if (command) {
-        console.log(`Running command: docker run ${command.dockerImage} ${command.command}`);
+    console.log(`Running command: docker run ${command.Job.dockerImage} ${command.Job.startCommand}`);
 
-        const containerId = await dockerService.startContainer({
-          commandId: command.id,
-          dockerImage: command.dockerImage,
-          command: command.command,
-        });
+    const containerId = await dockerService.startContainer({
+      commandId: command.id,
+      dockerImage: command.Job.dockerImage,
+      command: command.Job.startCommand,
+    });
 
-        containerManagerService.registerNewContainer({ containerId, commandId: command.id });
-      }
-    }
-
-    await wait(1000);
-  }
+    containerManagerService.registerNewContainer({ containerId, commandId: command.id });
+  });
 };
 
 const startWatchingForFinishedContainers = async () => {

@@ -36,8 +36,8 @@ const JobsList = () => {
               <Table.Row key={job.id}>
                 <Table.Cell>{job.status}</Table.Cell>
                 <Table.Cell>{job.dockerImage}</Table.Cell>
-                <Table.Cell>{job.discoverCommand}</Table.Cell>
                 <Table.Cell>{job.startCommand}</Table.Cell>
+                <Table.Cell>{job.selector}</Table.Cell>
               </Table.Row>
               {commands
                 .filter((command) => command.jobId === job.id)
@@ -46,7 +46,7 @@ const JobsList = () => {
                   <Table.Row key={command.id}>
                     <Table.Cell> - </Table.Cell>
                     <Table.Cell>{command.status}</Table.Cell>
-                    <Table.Cell>{command.type}</Table.Cell>
+                    <Table.Cell>{command.spec}</Table.Cell>
                   </Table.Row>
                 ))}
             </>

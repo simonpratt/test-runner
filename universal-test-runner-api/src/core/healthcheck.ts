@@ -1,5 +1,6 @@
 import { registerHealthCheckDependency } from '../external/healthcheck/healthcheck';
 import { prisma } from './prisma.client';
+import { rabbitWSPublisher } from './rabbit';
 
 registerHealthCheckDependency({
   name: 'postgres',
@@ -15,6 +16,26 @@ registerHealthCheckDependency({
       return {
         status: 'unhealthy',
         message: 'Failed to connect to postgres',
+        error: err,
+      };
+    }
+  },
+});
+
+registerHealthCheckDependency({
+  name: 'rabbitmq',
+  type: 'queue',
+  check: async () => {
+    try {
+      await rabbitWSPublisher.publish('HEALTH_CHECK.TEST_MESSAGE', { data: 'one two three' });
+
+      return {
+        status: 'healthy',
+      };
+    } catch (err) {
+      return {
+        status: 'unhealthy',
+        message: 'Failed to connect to rabbitmq',
         error: err,
       };
     }
