@@ -28,8 +28,8 @@ const JobsList = () => {
           <Table.Row>
             <Table.Cell>Status</Table.Cell>
             <Table.Cell>Docker Image</Table.Cell>
-            <Table.Cell>Discover Command</Table.Cell>
             <Table.Cell>Start Command</Table.Cell>
+            <Table.Cell>Selector</Table.Cell>
           </Table.Row>
           {jobs.map((job) => (
             <>
