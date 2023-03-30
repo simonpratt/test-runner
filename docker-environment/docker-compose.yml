@@ -1,0 +1,32 @@
+version: '3.1'
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:14
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+       - pgdata:/var/lib/postgresql/data
+    environment:
+      LC_ALL: C.UTF-8
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  rabbitmq:
+    container_name: "rabbitmq"
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: rabbit
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/.rabbitmq/lib
+      - ~/.docker-conf/rabbitmq/log/:/.rabbitmq/log
+
+volumes:
+  pgdata:
