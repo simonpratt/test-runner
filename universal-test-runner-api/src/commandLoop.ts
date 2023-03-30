@@ -13,7 +13,10 @@ const wait = (ms: number) => {
 
 export const startCommandLoop = async () => {
   while (running) {
-    const nextCommand = await prisma.command.findFirst({ where: { status: 'PENDING' }, include: { Job: true } });
+    const nextCommand = await prisma.command.findFirst({
+      where: { status: 'PENDING' },
+      include: { Job: { include: { dockerImageConfig: true } } },
+    });
 
     // Claim and emit if there is a command
     if (nextCommand) {

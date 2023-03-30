@@ -2,6 +2,8 @@ import React from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import App from './App';
+import DockerImageList from './components/dockerImages/DockerImageList';
+import EnvironmentList from './components/environments/environmentList';
 import JobsList from './components/jobs/JobsList';
 
 const router = createBrowserRouter([
@@ -16,6 +18,14 @@ const router = createBrowserRouter([
       {
         path: '/queue',
         element: <JobsList />,
+      },
+      {
+        path: '/environments',
+        element: <EnvironmentList />,
+      },
+      {
+        path: '/docker-images',
+        element: <DockerImageList />,
       },
     ],
   },

@@ -1,4 +1,4 @@
-import { Command, Job } from 'universal-test-runner-api/src/generated/client';
+import { Command, DockerImageConfig, Job } from 'universal-test-runner-api/src/generated/client';
 
 import { apiConnector } from './core/api.connector';
 import environment from './core/environment';
@@ -17,7 +17,9 @@ export const stopOrchestrator = () => {
 };
 
 type CommandWithJob = Command & {
-  Job: Job;
+  Job: Job & {
+    dockerImageConfig: DockerImageConfig;
+  };
 };
 
 const startWatchingForNewJobs = async () => {
@@ -25,12 +27,14 @@ const startWatchingForNewJobs = async () => {
   subscriber.subscribe('COMMAND.NEW', async (payload) => {
     const command = payload as CommandWithJob;
 
-    console.log(`Running command: docker run ${command.Job.dockerImage} ${command.Job.startCommand}`);
+    console.log(
+      `Running command: docker run ${command.Job.dockerImageConfig.dockerImage} ${command.Job.dockerImageConfig.startCommand}`,
+    );
 
     const containerId = await kubernetesService.startContainer({
       commandId: command.id,
-      dockerImage: command.Job.dockerImage,
-      command: command.Job.startCommand,
+      dockerImage: command.Job.dockerImageConfig.dockerImage,
+      command: command.Job.dockerImageConfig.startCommand,
     });
 
     containerManagerService.registerNewContainer({ containerId, commandId: command.id });

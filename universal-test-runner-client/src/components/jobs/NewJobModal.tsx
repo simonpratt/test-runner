@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react';
 
-import { Button, ControlGroup, Form, Input, Modal } from '@dtdot/lego';
+import { Alert, Button, ControlGroup, Form, Input, Modal, Select } from '@dtdot/lego';
 
 import { apiConnector } from '../../core/api.connector';
+import { useDockerImages } from '../../hooks/useDockerImages';
 
 export interface NewJobModalProps {
   onClose: () => void;
 }
 
 const NewJobModal = ({ onClose }: NewJobModalProps) => {
+  const { dockerImages, dockerImagesLoading, dockerImagesError } = useDockerImages();
+
   const [form, setForm] = React.useState({
-    dockerImage: 'sample',
-    startCommand: 'node build/start.js',
+    dockerImageConfigId: '',
     selector: 'test1.js,test2.js,test3.js',
   });
   const {
@@ -30,14 +32,30 @@ const NewJobModal = ({ onClose }: NewJobModalProps) => {
     submitJob(form);
   };
 
+  if (dockerImagesError) {
+    return (
+      <Modal onClose={onClose}>
+        <Modal.Body>
+          <Alert variant='warn' message='Error loading data...' />
+        </Modal.Body>
+      </Modal>
+    );
+  }
+
+  const selectOptions =
+    dockerImages?.map((dockerImage) => ({
+      label: dockerImage.name,
+      value: dockerImage.id,
+    })) || [];
+  const isLoading = dockerImagesLoading || !dockerImages;
+
   return (
-    <Modal onClose={onClose}>
+    <Modal loading={isLoading} onClose={onClose}>
       <Modal.Header header='New Job' />
       <Modal.Body>
         <Form value={form} onChange={setForm} onSubmit={handleSubmit}>
           <ControlGroup variation='comfortable'>
-            <Input name='dockerImage' label='Docker Image' placeholder='sample' />
-            <Input name='startCommand' label='Start Command' placeholder='node build/start.js' />
+            <Select name='dockerImageConfigId' label='Docker Image' options={selectOptions} />
             <Input name='selector' label='Selector' placeholder='test1.js,test2.js,test3.js' />
             <Button type='submit' loading={submitJobLoading}>
               Start

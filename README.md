@@ -16,4 +16,8 @@ To run locally
 1. Install dependencies and build the sample docker image using `npm run setup`
 1. Push the db schema using `npx prisma db push` within the `universal-test-runner-api` folder
 1. Start all services using `npm start` in each of the subdirectories
-1. Navigate to `http://localhost:3000` and start a job using the placeholder values
+
+To start a sample run
+1. Navigate to `http://localhost:3000` 
+1. Create a docker config using the `sample` image and `node build/start.js` as the start command
+1. Start a job using the docker config you just created and the default selector string

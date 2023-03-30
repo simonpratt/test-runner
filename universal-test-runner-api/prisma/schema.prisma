@@ -26,12 +26,12 @@ enum CommandStatus {
 }
 
 model Job {
-  id              String    @id @default(uuid())
-  dockerImage     String
-  startCommand    String
-  selector        String
-  status          JobStatus
-  Command         Command[]
+  id                  String            @id @default(uuid())
+  selector            String
+  status              JobStatus
+  Command             Command[]
+  dockerImageConfig   DockerImageConfig @relation(fields: [dockerImageConfigId], references: [id])
+  dockerImageConfigId String
 }
 
 model Command {
@@ -40,4 +40,35 @@ model Command {
   status CommandStatus
   Job    Job           @relation(fields: [jobId], references: [id])
   jobId  String
+}
+
+model Environment {
+  id                  String                @id
+  name                String
+  EnvironmentVariable EnvironmentVariable[]
+}
+
+model EnvironmentVariable {
+  id            String      @id @default(uuid())
+  name          String
+  value         String
+  Environment   Environment @relation(fields: [environmentId], references: [id])
+  environmentId String
+}
+
+model DockerImageConfig {
+  id                        String                      @id @default(uuid())
+  name                      String
+  dockerImage               String
+  startCommand              String
+  Job                       Job[]
+  DockerImageConfigVariable DockerImageConfigVariable[]
+}
+
+model DockerImageConfigVariable {
+  id                  String            @id @default(uuid())
+  name                String
+  value               String
+  DockerImageConfig   DockerImageConfig @relation(fields: [dockerImageConfigId], references: [id])
+  dockerImageConfigId String
 }

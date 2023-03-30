@@ -27,16 +27,12 @@ const JobsList = () => {
         <Table>
           <Table.Row>
             <Table.Cell>Status</Table.Cell>
-            <Table.Cell>Docker Image</Table.Cell>
-            <Table.Cell>Start Command</Table.Cell>
             <Table.Cell>Selector</Table.Cell>
           </Table.Row>
           {jobs.map((job) => (
             <>
               <Table.Row key={job.id}>
                 <Table.Cell>{job.status}</Table.Cell>
-                <Table.Cell>{job.dockerImage}</Table.Cell>
-                <Table.Cell>{job.startCommand}</Table.Cell>
                 <Table.Cell>{job.selector}</Table.Cell>
               </Table.Row>
               {commands
