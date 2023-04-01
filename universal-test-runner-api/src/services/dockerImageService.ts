@@ -7,6 +7,6 @@ export default {
   },
 
   async getDockerImages() {
-    return prisma.dockerImageConfig.findMany({ include: { DockerImageConfigVariable: true } });
+    return prisma.dockerImageConfig.findMany();
   },
 };
