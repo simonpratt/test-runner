@@ -7,13 +7,14 @@ export default {
   async getJobs() {
     return prisma.job.findMany();
   },
-  async submitJob(config: { dockerImageConfigId: string; selector: string }) {
-    const { dockerImageConfigId, selector } = config;
+  async submitJob(config: { environmentId: string; dockerImageConfigId: string; selector: string }) {
+    const { environmentId, dockerImageConfigId, selector } = config;
 
     console.log(chalk.blueBright(`[queue] Submitting job`));
 
     const job = await prisma.job.create({
       data: {
+        environmentId,
         dockerImageConfigId,
         selector,
         status: 'PENDING',

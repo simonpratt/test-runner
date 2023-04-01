@@ -12,6 +12,7 @@ import errors from './core/errors';
 import { configureExpressHealthCheck } from './core/healthcheck';
 import commandRouter from './routers/command.router';
 import dockerImageRouter from './routers/dockerImage.router';
+import environmentRouter from './routers/environment.router';
 import jobRouter from './routers/job.router';
 import orchestratorRouter from './routers/orchestrator.router';
 import resultsRouter from './routers/results.router';
@@ -26,6 +27,7 @@ const rootRouter = router({
   orchestrator: orchestratorRouter,
   results: resultsRouter,
   dockerImages: dockerImageRouter,
+  environments: environmentRouter,
 });
 
 export type RootRouter = typeof rootRouter;

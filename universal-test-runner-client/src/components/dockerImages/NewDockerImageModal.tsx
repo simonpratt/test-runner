@@ -15,19 +15,19 @@ const NewDockerImageModal = ({ onClose }: NewDockerImageModalProps) => {
     startCommand: 'node build/start.js',
   });
   const {
-    mutate: submitJob,
-    isLoading: submitJobLoading,
-    isSuccess: submitJobSuccess,
+    mutate: addDockerImage,
+    isLoading: addDockerImageLoading,
+    isSuccess: addDockerImageSuccess,
   } = apiConnector.dockerImages.addDockerImage.useMutation();
 
   useEffect(() => {
-    if (submitJobSuccess) {
+    if (addDockerImageSuccess) {
       onClose();
     }
-  }, [submitJobSuccess, onClose]);
+  }, [addDockerImageSuccess, onClose]);
 
   const handleSubmit = async () => {
-    submitJob(form);
+    addDockerImage(form);
   };
 
   return (
@@ -39,7 +39,7 @@ const NewDockerImageModal = ({ onClose }: NewDockerImageModalProps) => {
             <Input name='name' label='name' placeholder='test1.js,test2.js,test3.js' />
             <Input name='dockerImage' label='Docker Image' placeholder='sample' />
             <Input name='startCommand' label='Start Command' placeholder='node build/start.js' />
-            <Button type='submit' loading={submitJobLoading}>
+            <Button type='submit' loading={addDockerImageLoading}>
               Create
             </Button>
           </ControlGroup>

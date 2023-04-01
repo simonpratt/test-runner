@@ -32,6 +32,8 @@ model Job {
   Command             Command[]
   dockerImageConfig   DockerImageConfig @relation(fields: [dockerImageConfigId], references: [id])
   dockerImageConfigId String
+  Environment         Environment?      @relation(fields: [environmentId], references: [id])
+  environmentId       String?
 }
 
 model Command {
@@ -45,6 +47,7 @@ model Command {
 model Environment {
   id                  String                @id
   name                String
+  Job                 Job[]
   EnvironmentVariable EnvironmentVariable[]
 }
 

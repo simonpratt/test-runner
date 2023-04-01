@@ -4,6 +4,7 @@ import { Alert, Button, ControlGroup, Form, Input, Modal, Select } from '@dtdot/
 
 import { apiConnector } from '../../core/api.connector';
 import { useDockerImages } from '../../hooks/useDockerImages';
+import { useEnvironments } from '../../hooks/useEnvironments';
 
 export interface NewJobModalProps {
   onClose: () => void;
@@ -11,9 +12,11 @@ export interface NewJobModalProps {
 
 const NewJobModal = ({ onClose }: NewJobModalProps) => {
   const { dockerImages, dockerImagesLoading, dockerImagesError } = useDockerImages();
+  const { environments, environmentsLoading, environmentsError } = useEnvironments();
 
   const [form, setForm] = React.useState({
     dockerImageConfigId: '',
+    environmentId: '',
     selector: 'test1.js,test2.js,test3.js',
   });
   const {
@@ -32,7 +35,7 @@ const NewJobModal = ({ onClose }: NewJobModalProps) => {
     submitJob(form);
   };
 
-  if (dockerImagesError) {
+  if (dockerImagesError || environmentsError) {
     return (
       <Modal onClose={onClose}>
         <Modal.Body>
@@ -42,12 +45,19 @@ const NewJobModal = ({ onClose }: NewJobModalProps) => {
     );
   }
 
-  const selectOptions =
+  const isLoading = dockerImagesLoading || !dockerImages || environmentsLoading || !environments;
+
+  const dockerImageSelectOptions =
     dockerImages?.map((dockerImage) => ({
       label: dockerImage.name,
       value: dockerImage.id,
     })) || [];
-  const isLoading = dockerImagesLoading || !dockerImages;
+
+  const environmentSelectOptions =
+    environments?.map((dockerImage) => ({
+      label: dockerImage.name,
+      value: dockerImage.id,
+    })) || [];
 
   return (
     <Modal loading={isLoading} onClose={onClose}>
@@ -55,7 +65,18 @@ const NewJobModal = ({ onClose }: NewJobModalProps) => {
       <Modal.Body>
         <Form value={form} onChange={setForm} onSubmit={handleSubmit}>
           <ControlGroup variation='comfortable'>
-            <Select name='dockerImageConfigId' label='Docker Image' options={selectOptions} />
+            <Select
+              name='dockerImageConfigId'
+              label='Docker Image'
+              placeholder='Select docker image'
+              options={dockerImageSelectOptions}
+            />
+            <Select
+              name='environmentId'
+              label='Environment'
+              placeholder='Select environment'
+              options={environmentSelectOptions}
+            />
             <Input name='selector' label='Selector' placeholder='test1.js,test2.js,test3.js' />
             <Button type='submit' loading={submitJobLoading}>
               Start

@@ -2,7 +2,8 @@ import environment from "./core/environment";
 import axios from "axios";
 import { argv } from "process";
 
-console.log("Submitting", argv[2]);
+console.log("Running tests");
+console.log(process.env);
 
 const wait = (ms: number) => {
   return new Promise((r) => setTimeout(r, ms));

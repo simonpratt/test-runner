@@ -1,4 +1,4 @@
-import { KubeConfig, KubernetesObjectApi, KubernetesObject, BatchV1Api } from '@kubernetes/client-node';
+import { KubeConfig, KubernetesObjectApi, KubernetesObject, BatchV1Api, V1Job } from '@kubernetes/client-node';
 import { load } from 'js-yaml';
 
 const kc = new KubeConfig();
@@ -32,9 +32,28 @@ spec:
 export type JobStatus = 'pending' | 'running' | 'finished' | 'failed' | 'unknown';
 
 export default {
-  async startContainer(config: { commandId: string; dockerImage: string; command: string }) {
-    const spec = makeJobSpec(config.commandId, config.dockerImage, config.command);
-    const yaml: KubernetesObject = load(spec) as any;
+  async startContainer(config: {
+    commandId: string;
+    dockerImage: string;
+    command: string;
+    variables: { name: string; value: string }[];
+  }) {
+    const { commandId, dockerImage, command, variables } = config;
+    console.log(variables);
+
+    // Build the spec from the template yaml
+    const kubesSpec = makeJobSpec(commandId, dockerImage, command);
+    const yaml: V1Job = load(kubesSpec) as any;
+
+    // Verify the container to make typescript happy
+    if (!yaml.spec?.template.spec?.containers[0]) {
+      throw new Error('At least one container expected');
+    }
+
+    // Set the environment variables
+    yaml.spec.template.spec.containers[0].env = variables;
+
+    // Create the job in kubernetes
     const result = await client.create(yaml);
     const jobId = result.body.metadata?.name;
 

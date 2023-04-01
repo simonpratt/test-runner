@@ -18,12 +18,14 @@ const queueRouter = router({
   submitJob: publicProcedure
     .input(
       z.object({
+        environmentId: z.string(),
         dockerImageConfigId: z.string(),
         selector: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
       await jobService.submitJob({
+        environmentId: input.environmentId,
         dockerImageConfigId: input.dockerImageConfigId,
         selector: input.selector,
       });

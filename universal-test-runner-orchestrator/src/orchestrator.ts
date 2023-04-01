@@ -1,3 +1,4 @@
+import { RunCommandEvent } from 'universal-test-runner-api/src/commandLoop';
 import { Command, DockerImageConfig, Job } from 'universal-test-runner-api/src/generated/client';
 
 import { apiConnector } from './core/api.connector';
@@ -16,28 +17,29 @@ export const stopOrchestrator = () => {
   running = false;
 };
 
-type CommandWithJob = Command & {
-  Job: Job & {
-    dockerImageConfig: DockerImageConfig;
-  };
-};
-
 const startWatchingForNewJobs = async () => {
   const subscriber = new RabbitInstance(environment.RABBITMQ_JOB_EXCHANGE);
-  subscriber.subscribe('COMMAND.NEW', async (payload) => {
-    const command = payload as CommandWithJob;
+  subscriber.subscribe('COMMAND.RUN', async (payload) => {
+    const command = payload as RunCommandEvent;
 
-    console.log(
-      `Running command: docker run ${command.Job.dockerImageConfig.dockerImage} ${command.Job.dockerImageConfig.startCommand}`,
-    );
+    console.log(`Running command: docker run ${command.dockerImage} ${command.startCommand}`);
 
-    const containerId = await kubernetesService.startContainer({
-      commandId: command.id,
-      dockerImage: command.Job.dockerImageConfig.dockerImage,
-      command: command.Job.dockerImageConfig.startCommand,
-    });
+    let containerId: string | undefined;
+    try {
+      containerId = await kubernetesService.startContainer({
+        commandId: command.commandId,
+        dockerImage: command.dockerImage,
+        command: command.startCommand,
+        variables: command.variables,
+      });
+      containerManagerService.registerNewContainer({ containerId, commandId: command.commandId });
+    } catch (err) {
+      await apiConnector.orchestrator.markCommandAborted.mutate({ commandId: command.commandId });
 
-    containerManagerService.registerNewContainer({ containerId, commandId: command.id });
+      if (containerId) {
+        containerManagerService.unregisterContainer(containerId);
+      }
+    }
   });
 };
 
