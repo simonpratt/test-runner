@@ -1,16 +1,37 @@
-import { KubeConfig, KubernetesObjectApi, KubernetesObject, BatchV1Api, V1Job } from '@kubernetes/client-node';
+import { KubeConfig, KubernetesObjectApi, CoreV1Api, BatchV1Api, V1Job } from '@kubernetes/client-node';
+import chalk from 'chalk';
 import { load } from 'js-yaml';
 
+import environment from '../core/environment';
+
+const kubeConfig = Buffer.from(environment.KUBERNETES_CONFIG_BASE64, 'base64');
 const kc = new KubeConfig();
-kc.loadFromDefault();
+kc.loadFromString(kubeConfig.toString());
 
 const client = KubernetesObjectApi.makeApiClient(kc);
 const batchApi = kc.makeApiClient(BatchV1Api);
+const coreApi = kc.makeApiClient(CoreV1Api);
+
+export const kubernetesStartupLog = async () => {
+  try {
+    await coreApi.readNamespace(environment.KUBERNETES_NAMESPACE);
+    console.log(chalk.green(`[kubernetes] connected to namespace: ${environment.KUBERNETES_NAMESPACE}`));
+  } catch (err: any) {
+    console.log(chalk.red(`[kubernetes] failed to connect to namespace: ${environment.KUBERNETES_NAMESPACE}`));
+    console.log(chalk.red(`[kubernetes] ${err?.body?.message}`));
+  }
+};
+
+export const testKubernetesConnection = async () => {
+  const response = await coreApi.readNamespace(environment.KUBERNETES_NAMESPACE);
+  console.log(response);
+};
 
 const makeJobSpec = (commandId: string, dockerImage: string, command: string) => {
   return `
 apiVersion: batch/v1
 kind: Job
+namespace: ${environment.KUBERNETES_NAMESPACE}
 metadata:
   name: test-job-${commandId}
 spec:
@@ -65,7 +86,7 @@ export default {
   },
 
   async getAllJobsSummary() {
-    const jobs = await batchApi.listNamespacedJob('default');
+    const jobs = await batchApi.listNamespacedJob(environment.KUBERNETES_NAMESPACE);
 
     const jobsSummary = jobs.body.items.map((job) => {
       const isFailed = !!job.status?.failed;

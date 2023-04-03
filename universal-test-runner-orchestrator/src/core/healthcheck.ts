@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 
 import { configureExpressHealthCheckFactory, registerHealthCheckDependency } from '../external/healthcheck/healthcheck';
+import { testKubernetesConnection } from '../services/kubernetes.service';
 
 let lastHeartbeatTime = DateTime.now();
 const registerHeartbeat = () => {
@@ -29,6 +30,26 @@ registerHealthCheckDependency({
       return {
         status: 'unhealthy',
         message: 'Failed to connect to universal-test-runner-api',
+        error: err,
+      };
+    }
+  },
+});
+
+registerHealthCheckDependency({
+  name: 'kubernetes',
+  type: 'external',
+  check: async () => {
+    try {
+      await testKubernetesConnection();
+
+      return {
+        status: 'healthy',
+      };
+    } catch (err) {
+      return {
+        status: 'unhealthy',
+        message: 'Failed to connect to kubernetes',
         error: err,
       };
     }
