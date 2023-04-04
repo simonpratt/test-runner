@@ -1,5 +1,5 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import { RootRouter } from 'universal-test-runner-api';
+import { RootRouter } from 'test-runner-api';
 
 import environment from './environment';
 

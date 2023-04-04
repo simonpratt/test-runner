@@ -1,6 +1,4 @@
-import { RunCommandEvent } from 'universal-test-runner-api/src/commandLoop';
-import { Command, DockerImageConfig, Job } from 'universal-test-runner-api/src/generated/client';
-
+import { RunCommandEvent } from '../../test-runner-api/src/commandLoop';
 import { apiConnector } from './core/api.connector';
 import environment from './core/environment';
 import { RabbitInstance } from './external/rabbit/rabbit.instance';
@@ -58,13 +56,13 @@ const startWatchingForFinishedContainers = async () => {
           await apiConnector.orchestrator.markCommandFinished.mutate({ commandId: container.commandId });
           break;
         case 'failed':
-        case 'unknown':
           console.log(`Container ${container.containerId} has restarted`);
           break;
         case 'running':
         case 'pending':
           // do nothing
           break;
+        case 'unknown':
         default:
           console.log(`Container ${container.containerId} has unknown status: ${status}`);
       }

@@ -1,5 +1,5 @@
 {
-  "name": "universal-test-runner",
+  "name": "test-runner",
   "author": "Simon Pratt (19920260+simonpratt@users.noreply.github.com)",
   "license": "MIT",
   "scripts": {
@@ -12,8 +12,8 @@
   },
   "workspaces": [
     "sample-container",
-    "universal-test-runner-api",
-    "universal-test-runner-orchestrator",
-    "universal-test-runner-client"
+    "test-runner-api",
+    "test-runner-orchestrator",
+    "test-runner-client"
   ]
 }

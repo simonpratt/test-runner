@@ -1,5 +1,5 @@
 {
-  "name": "universal-test-runner-orchestrator",
+  "name": "test-runner-orchestrator",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -33,6 +33,6 @@
     "prettier": "^2.8.1",
     "tsx": "^3.12.2",
     "typescript": "^4.9.4",
-    "universal-test-runner-api": "^1.0.0"
+    "test-runner-api": "^1.0.0"
   }
 }

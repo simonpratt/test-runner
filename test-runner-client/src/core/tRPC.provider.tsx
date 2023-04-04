@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
 import { createWSClient, wsLink } from '@trpc/client';
-import { RootRouter } from 'universal-test-runner-api';
+import { RootRouter } from 'test-runner-api';
 
 import { apiConnector } from './api.connector';
 import environment from './environment';

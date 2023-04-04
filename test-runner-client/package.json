@@ -1,5 +1,5 @@
 {
-  "name": "universal-test-runner-client",
+  "name": "test-runner-client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -47,7 +47,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.8.3",
     "typescript": "^4.9.3",
-    "universal-test-runner-api": "^1.0.0",
+    "test-runner-api": "^1.0.0",
     "vite": "^4.0.0"
   }
 }

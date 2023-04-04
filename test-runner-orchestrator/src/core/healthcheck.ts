@@ -29,7 +29,7 @@ registerHealthCheckDependency({
     } catch (err) {
       return {
         status: 'unhealthy',
-        message: 'Failed to connect to universal-test-runner-api',
+        message: 'Failed to connect to test-runner-api',
         error: err,
       };
     }

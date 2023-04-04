@@ -31,9 +31,9 @@ const makeJobSpec = (commandId: string, dockerImage: string, command: string) =>
   return `
 apiVersion: batch/v1
 kind: Job
-namespace: ${environment.KUBERNETES_NAMESPACE}
 metadata:
   name: test-job-${commandId}
+  namespace: ${environment.KUBERNETES_NAMESPACE}
 spec:
   template:
     spec:
