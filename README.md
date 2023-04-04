@@ -9,7 +9,9 @@ Future work could include improvements to the test discovery/selection process, 
 This project is made up of three main components
 
 *test-runner-api* is the owner of the queue and interacts with both the orchestrator and the client
+
 *test-runner-orchestrator* is responsible for spawning and tracking jobs
+
 *test-runner-client* is mostly for demo purposes and is responsible for allowing users to spawn new jobs
 
 To run locally
@@ -21,5 +23,6 @@ To run locally
 
 To start a sample run
 1. Navigate to `http://localhost:3000` 
-1. Create a docker config using the `sample` image and `node build/start.js` as the start command
-1. Start a job using the docker config you just created and the default selector string
+1. Navigate to the environments page and create an environment config using the default values
+1. Navigate to the docker images page and define a docker image using the default values
+1. Navigate to the queue page and start a job using both configs you just created and the default selector string
