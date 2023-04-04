@@ -60,18 +60,9 @@ model EnvironmentVariable {
 }
 
 model DockerImageConfig {
-  id                        String                      @id @default(uuid())
-  name                      String
-  dockerImage               String
-  startCommand              String
-  Job                       Job[]
-  DockerImageConfigVariable DockerImageConfigVariable[]
-}
-
-model DockerImageConfigVariable {
-  id                  String            @id @default(uuid())
-  name                String
-  value               String
-  DockerImageConfig   DockerImageConfig @relation(fields: [dockerImageConfigId], references: [id])
-  dockerImageConfigId String
+  id           String @id @default(uuid())
+  name         String
+  dockerImage  String
+  startCommand String
+  Job          Job[]
 }

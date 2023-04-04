@@ -1,6 +1,8 @@
 ## About
 
-This is a proof of concept for running tests (or other distributed tasks) within a kubernetes cluster or docker environment. The core functionality is to spawn and track jobs based on the user provided start and discover commands for any given container.
+This is a proof of concept for running tests (or other distributed tasks) within a kubernetes cluster or docker environment. The core functionality is to spawn and track jobs based on the configured start command for any given container. 
+
+Future work could include improvements to the test discovery/selection process, test run prioritization, and a parallel mode to work with services like cypress dashboard.
 
 ## Usage
 
