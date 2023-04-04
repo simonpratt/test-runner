@@ -3,7 +3,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
 import App from './App';
 import DockerImageList from './components/dockerImages/DockerImageList';
-import EnvironmentList from './components/environments/environmentList';
+import EnvironmentList from './components/environments/EnvironmentList';
 import JobsList from './components/jobs/JobsList';
 
 const router = createBrowserRouter([
