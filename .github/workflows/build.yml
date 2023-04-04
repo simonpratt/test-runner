@@ -36,7 +36,7 @@ jobs:
           docker buildx build --platform linux/amd64 -t $REGISTRY:$TAG --push -f universal-test-runner-api/Dockerfile .
           docker buildx imagetools create $REGISTRY:$TAG --tag $REGISTRY:latest
 
-  build-migrations:
+  build-api-migrations:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -65,7 +65,7 @@ jobs:
           docker buildx build --platform linux/amd64 -t $REGISTRY:$TAG --push -f universal-test-runner-api/prisma/Dockerfile .
           docker buildx imagetools create $REGISTRY:$TAG --tag $REGISTRY:latest
 
-  build-scraper:
+  build-orchestrator:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
