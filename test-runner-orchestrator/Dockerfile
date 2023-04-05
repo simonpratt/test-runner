@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-slim
 
 WORKDIR /usr/app
 
@@ -15,7 +15,7 @@ RUN npm run lint-all
 RUN npm run build-all
 
 # 2nd stage build to strip out everything that's not needed
-FROM node:18-alpine
+FROM node:18-slim
 
 WORKDIR /usr/app
 

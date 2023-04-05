@@ -1,4 +1,4 @@
-FROM node:18-alpine 
+FROM node:18-slim 
 
 WORKDIR /usr/app
 
@@ -14,7 +14,7 @@ RUN npm run build-all
 
 
 # Build the nginx container to serve the files
-FROM nginx:stable-alpine
+FROM nginx:stable-slim
 
 COPY --from=0 /usr/app/test-runner-client/build /usr/share/nginx/html
 COPY --from=0 /usr/app/test-runner-client/scripts/build-environment.sh /docker-entrypoint.d

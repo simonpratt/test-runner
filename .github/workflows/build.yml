@@ -122,3 +122,32 @@ jobs:
           docker buildx create --use multi-arch-build --platform linux/amd64
           docker buildx build --platform linux/amd64 -t $REGISTRY:$TAG --push -f test-runner-client/Dockerfile .
           docker buildx imagetools create $REGISTRY:$TAG --tag $REGISTRY:latest
+
+  build-sample:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x.x
+          cache: npm
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker build and push
+        run: |
+          REGISTRY=$(echo ghcr.io/simonpratt/test-runner-mock)
+          TAG=${TAG:-`echo ${GITHUB_SHA} | cut -c -7`}
+          echo $REGISTRY
+          echo $TAG
+          docker context create multi-arch-build
+          # docker buildx create --use multi-arch-build --platform linux/amd64,linux/arm64
+          # docker buildx build --platform linux/amd64,linux/arm64 -t $REGISTRY:$TAG --push -f test-runner-mock/Dockerfile .
+          docker buildx create --use multi-arch-build --platform linux/amd64
+          docker buildx build --platform linux/amd64 -t $REGISTRY:$TAG --push -f test-runner-mock/Dockerfile .
+          docker buildx imagetools create $REGISTRY:$TAG --tag $REGISTRY:latest
