@@ -1,5 +1,5 @@
+import { RootRouter } from '@test-runner/api';
 import type { inferRouterOutputs } from '@trpc/server';
-import { RootRouter } from 'test-runner-api';
 
 type RouterOutput = inferRouterOutputs<RootRouter>;
 

@@ -40,7 +40,7 @@ model Command {
   id     String        @id @default(uuid())
   spec   String
   status CommandStatus
-  Job    Job           @relation(fields: [jobId], references: [id])
+  Job    Job           @relation(fields: [jobId], references: [id], onDelete: Cascade)
   jobId  String
 }
 

@@ -2,6 +2,7 @@ import chalk from 'chalk';
 
 import { prisma } from '../core/prisma.client';
 import { rabbitWSPublisher } from '../core/rabbit';
+import asyncForEach from '../helpers/asyncForEach';
 
 export default {
   async getJobs() {
@@ -38,9 +39,19 @@ export default {
           spec: spec,
         },
       });
+      console.log(`****** publishing ${spec}`);
       await rabbitWSPublisher.publish('COMMAND.CREATE', command);
     }
 
     return job;
+  },
+  async clearJobs() {
+    const jobs = await prisma.job.findMany();
+
+    asyncForEach(jobs, async (job) => {
+      await rabbitWSPublisher.publish('JOB.DELETE', job);
+    });
+
+    await prisma.job.deleteMany();
   },
 };

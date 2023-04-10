@@ -1,5 +1,5 @@
 {
-  "name": "test-runner-orchestrator",
+  "name": "@test-runner/orchestrator",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@kubernetes/client-node": "^0.18.1",
+    "@test-runner/rabbitmq": "^1.0.0",
     "@trpc/client": "^10.9.0",
     "axios": "^1.2.2",
     "chalk": "^4.1.2",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@dtdot/eslint-config": "^0.0.8",
+    "@test-runner/api": "^1.0.0",
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/luxon": "^3.2.0",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
@@ -32,7 +34,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.8.1",
     "tsx": "^3.12.2",
-    "typescript": "^4.9.4",
-    "test-runner-api": "^1.0.0"
+    "typescript": "^4.9.4"
   }
 }

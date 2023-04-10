@@ -1,5 +1,5 @@
 {
-  "name": "test-runner-api",
+  "name": "@test-runner/api",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
@@ -8,7 +8,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint 'src/**/*.{js,ts}'",
-    "start": "tsx watch -r dotenv/config src/index.ts",
+    "start": "tsx watch -r dotenv/config src/start.ts",
     "prebuild": "npx prisma generate",
     "postbuild": "cp -r src/generated build",
     "build": "tsc",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.10.1",
+    "@test-runner/rabbitmq": "^1.0.0",
     "@trpc/server": "^10.9.0",
     "@types/ws": "^8.5.4",
     "amqplib": "^0.10.3",

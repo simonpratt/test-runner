@@ -4,6 +4,6 @@ WORKDIR /usr/app
 
 COPY ./build ./build
 COPY ./package.json ./package.json
-COPY ./package-lock.json ./package-lock.json
 
-RUN npm ci --only=production
+# Bit of a dodgy build since this is part of the workspace but it's not worth doing a proper workspace-scoped build with npm ci
+RUN npm i --only=production

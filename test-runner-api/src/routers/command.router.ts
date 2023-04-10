@@ -1,10 +1,11 @@
+import { RabbitMqTopic } from '@test-runner/rabbitmq';
 import { initTRPC } from '@trpc/server';
 import { observable } from '@trpc/server/observable';
 
 import environment from '../core/environment';
-import { RabbitInstance } from '../external/rabbit/rabbit.instance';
 import { Command } from '../generated/client';
 import commandService from '../services/command.service';
+import { RabbitMqWebsocketDefinition } from '../types/rabbit.types';
 
 const t = initTRPC.create();
 
@@ -26,12 +27,10 @@ const commandRouter = router({
         emit.next(data);
       };
 
-      console.log('Connecting to RabbitMQ...');
-
-      const consumer = new RabbitInstance(environment.RABBITMQ_WS_EXCHANGE);
-      consumer.subscribe('COMMAND.CREATE', (command: any) => onWatch({ type: 'create', command }));
-      consumer.subscribe('COMMAND.UPDATE', (command: any) => onWatch({ type: 'update', command }));
-      consumer.subscribe('COMMAND.DELETE', (command: any) => onWatch({ type: 'delete', command }));
+      const consumer = new RabbitMqTopic<RabbitMqWebsocketDefinition>(environment.RABBITMQ_WS_EXCHANGE, 'COMMAND.*');
+      consumer.subscribe('COMMAND.CREATE', (command) => onWatch({ type: 'create', command }));
+      consumer.subscribe('COMMAND.UPDATE', (command) => onWatch({ type: 'update', command }));
+      consumer.subscribe('COMMAND.DELETE', (command) => onWatch({ type: 'delete', command }));
 
       return () => {
         consumer.disconnect();

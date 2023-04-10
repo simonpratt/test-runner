@@ -1,11 +1,12 @@
+import { RabbitMqTopic } from '@test-runner/rabbitmq';
 import { initTRPC } from '@trpc/server';
 import { observable } from '@trpc/server/observable';
 import { z } from 'zod';
 
 import environment from '../core/environment';
-import { RabbitInstance } from '../external/rabbit/rabbit.instance';
 import { Job } from '../generated/client';
 import jobService from '../services/job.service';
+import { RabbitMqWebsocketDefinition } from '../types/rabbit.types';
 
 const t = initTRPC.create();
 
@@ -30,6 +31,9 @@ const queueRouter = router({
         selector: input.selector,
       });
     }),
+  clearJobs: publicProcedure.mutation(async () => {
+    return jobService.clearJobs();
+  }),
   getJobs: publicProcedure.query(async () => {
     return jobService.getJobs();
   }),
@@ -39,12 +43,10 @@ const queueRouter = router({
         emit.next(data);
       };
 
-      console.log('Connecting to RabbitMQ...');
-
-      const consumer = new RabbitInstance(environment.RABBITMQ_WS_EXCHANGE);
-      consumer.subscribe('JOB.CREATE', (job: any) => onWatch({ type: 'create', job }));
-      consumer.subscribe('JOB.UPDATE', (job: any) => onWatch({ type: 'update', job }));
-      consumer.subscribe('JOB.DELETE', (job: any) => onWatch({ type: 'delete', job }));
+      const consumer = new RabbitMqTopic<RabbitMqWebsocketDefinition>(environment.RABBITMQ_WS_EXCHANGE, 'JOB.*');
+      consumer.subscribe('JOB.CREATE', (job) => onWatch({ type: 'create', job }));
+      consumer.subscribe('JOB.UPDATE', (job) => onWatch({ type: 'update', job }));
+      consumer.subscribe('JOB.DELETE', (job) => onWatch({ type: 'delete', job }));
 
       return () => {
         consumer.disconnect();

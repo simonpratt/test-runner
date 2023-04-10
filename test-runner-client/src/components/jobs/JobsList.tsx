@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
-import { Button, Loader, PaddedLayout, Spacer, Table } from '@dtdot/lego';
+import { Button, ButtonGroup, Loader, PaddedLayout, Spacer, Table } from '@dtdot/lego';
 
+import { apiConnector } from '../../core/api.connector';
 import { useCommands } from '../../hooks/useCommands';
 import { useDockerImages } from '../../hooks/useDockerImages';
 import { useEnvironments } from '../../hooks/useEnvironments';
@@ -14,6 +15,7 @@ const JobsList = () => {
   const { commands, commandsLoading } = useCommands();
   const { environments, environmentsLoading } = useEnvironments();
   const { dockerImages, dockerImagesLoading } = useDockerImages();
+  const { mutate: clearJobs } = apiConnector.job.clearJobs.useMutation();
 
   if (!jobs || jobsLoading) {
     return <Loader />;
@@ -26,7 +28,12 @@ const JobsList = () => {
   return (
     <>
       <PaddedLayout>
-        <Button onClick={() => setShowNewJobModal(true)}>Queue</Button>
+        <ButtonGroup>
+          <Button onClick={() => setShowNewJobModal(true)}>Queue</Button>
+          <Button variant='tertiary' onClick={() => clearJobs()}>
+            Clear
+          </Button>
+        </ButtonGroup>
         <Spacer size='4x' />
         <Table>
           <Table.Row>

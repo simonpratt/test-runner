@@ -1,7 +1,9 @@
-import { RunCommandEvent } from '../../test-runner-api/src/commandLoop';
+import { RabbitMqCommandRunDefinition } from '@test-runner/api';
+import { RabbitMqRoundRobin } from '@test-runner/rabbitmq';
+import chalk from 'chalk';
+
 import { apiConnector } from './core/api.connector';
 import environment from './core/environment';
-import { RabbitInstance } from './external/rabbit/rabbit.instance';
 import containerManagerService from './services/containerManager.service';
 import kubernetesService from './services/kubernetes.service';
 
@@ -15,12 +17,15 @@ export const stopOrchestrator = () => {
   running = false;
 };
 
-const startWatchingForNewJobs = async () => {
-  const subscriber = new RabbitInstance(environment.RABBITMQ_JOB_EXCHANGE);
-  subscriber.subscribe('COMMAND.RUN', async (payload) => {
-    const command = payload as RunCommandEvent;
+const commandRunRoundRobin = new RabbitMqRoundRobin<RabbitMqCommandRunDefinition>(
+  environment.RABBITMQ_JOB_EXCHANGE,
+  'test-runner-rr-job-queue',
+  'COMMAND.RUN',
+);
 
-    console.log(`Running command: docker run ${command.dockerImage} ${command.startCommand}`);
+const startWatchingForNewJobs = async () => {
+  commandRunRoundRobin.subscribe('COMMAND.RUN', async (command) => {
+    console.log(chalk.grey(`[orchestrator] Starting container: ${command.dockerImage} ${command.startCommand}`));
 
     let containerId: string | undefined;
     try {

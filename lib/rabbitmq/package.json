@@ -1,0 +1,18 @@
+{
+  "name": "@test-runner/rabbitmq",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "author": "Simon Pratt (19920260+simonpratt@users.noreply.github.com)",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.1",
+    "typescript": "^4.9.4"
+  }
+}

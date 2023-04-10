@@ -25,6 +25,6 @@ export default {
   async markCommandAborted(commandId: string) {
     console.log(`Processing aborted command: ${commandId}`);
 
-    await prisma.command.update({ where: { id: commandId }, data: { status: 'ABORTED' } });
+    await prisma.command.updateMany({ where: { id: commandId }, data: { status: 'ABORTED' } });
   },
 };

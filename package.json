@@ -11,9 +11,11 @@
     "lint-all": "npm run lint --workspaces --if-present"
   },
   "workspaces": [
+    "lib/*",
     "test-runner-mock",
     "test-runner-api",
     "test-runner-orchestrator",
     "test-runner-client"
-  ]
+  ],
+  "private": true
 }

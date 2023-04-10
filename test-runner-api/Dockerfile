@@ -24,4 +24,4 @@ COPY --from=0 /usr/app/test-runner-api/build /usr/app/test-runner-api/build
 RUN npm run ci-all-production
 
 EXPOSE 80
-CMD ["node", "./test-runner-api/build/index.js"]
+CMD ["node", "./test-runner-api/build/start.js"]
