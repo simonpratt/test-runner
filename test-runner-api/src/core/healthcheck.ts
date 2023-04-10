@@ -1,4 +1,5 @@
-import { registerHealthCheckDependency } from '../external/healthcheck/healthcheck';
+import { expressHealthCheckFactory, registerHealthCheckDependency } from '@test-runner/healthcheck';
+
 import { prisma } from './prisma.client';
 import { rabbitWSPublisher } from './rabbit';
 
@@ -42,4 +43,6 @@ registerHealthCheckDependency({
   },
 });
 
-export { configureExpressHealthCheck } from '../external/healthcheck/healthcheck';
+const configureExpressHealthCheck = expressHealthCheckFactory();
+
+export { configureExpressHealthCheck };

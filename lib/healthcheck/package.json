@@ -1,0 +1,20 @@
+{
+  "name": "@test-runner/healthcheck",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/healthcheck.js",
+  "author": "Simon Pratt (19920260+simonpratt@users.noreply.github.com)",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "express": "^4.18.2",
+    "zod": "^3.21.4"
+  }
+}

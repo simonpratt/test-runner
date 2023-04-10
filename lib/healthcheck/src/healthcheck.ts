@@ -80,7 +80,7 @@ const getDependenciesHealth = async () => {
   };
 };
 
-export const configureExpressHealthCheckFactory = () => (app: Express) => {
+export const expressHealthCheckFactory = () => (app: Express) => {
   const healthRouter = Router();
 
   healthRouter.get(

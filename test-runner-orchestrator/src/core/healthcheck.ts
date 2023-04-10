@@ -1,6 +1,6 @@
+import { expressHealthCheckFactory, registerHealthCheckDependency } from '@test-runner/healthcheck';
 import { DateTime } from 'luxon';
 
-import { configureExpressHealthCheckFactory, registerHealthCheckDependency } from '../external/healthcheck/healthcheck';
 import { testKubernetesConnection } from '../services/kubernetes.service';
 
 let lastHeartbeatTime = DateTime.now();
@@ -56,6 +56,6 @@ registerHealthCheckDependency({
   },
 });
 
-const configureExpressHealthCheck = configureExpressHealthCheckFactory();
+const configureExpressHealthCheck = expressHealthCheckFactory();
 
 export { configureExpressHealthCheck, registerHeartbeat };

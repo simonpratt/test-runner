@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.10.1",
+    "@test-runner/healthcheck": "^1.0.0",
     "@test-runner/rabbitmq": "^1.0.0",
     "@trpc/server": "^10.9.0",
     "@types/ws": "^8.5.4",
