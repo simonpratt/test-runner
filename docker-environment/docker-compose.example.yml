@@ -1,0 +1,114 @@
+version: '3.1'
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:14
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+       - pgdata:/var/lib/postgresql/data
+    environment:
+      LC_ALL: C.UTF-8
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  rabbitmq:
+    container_name: "rabbitmq"
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: rabbit
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/.rabbitmq/lib
+      - ~/.docker-conf/rabbitmq/log/:/.rabbitmq/log
+
+  test-runner-api-migrations:
+    container_name: "test-runner-api-migrations"
+    image: ghcr.io/simonpratt/test-runner-api-migrations:latest
+    restart: on-failure
+    platform: linux/amd64
+    depends_on:
+      - postgres
+    environment:
+      DB_CREATE_CONNECTION_STRING: postgresql://postgres:postgres@postgres:5432
+      DB_CREATE_NAME: test_runner
+      DB_SCHEMA_NAME: tr_api
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/test_runner?schema=tr_api
+
+  test-runner-orchestrator:
+    container_name: "test-runner-orchestrator"
+    image: ghcr.io/simonpratt/test-runner-orchestrator:latest
+    platform: linux/x86_64 # TEMP remove after prisma supports ARM build
+    restart: always
+    ports:
+      - 9002:9002
+    environment:
+      UNIVERSAL_TEST_RUNNER_API_URL: http://test-runner-api:9000
+      SERVER_PORT: "9002"
+      KUBERNETES_CONFIG_BASE64: 
+      KUBERNETES_NAMESPACE: orchestrator-jobs
+      SERVICE_NAMESPACE: test-runner
+      SERVICE_NAME: test-runner-orchestrator
+      SERVICE_VERSION: docker-environment
+      RABBITMQ_USERNAME: rabbit
+      RABBITMQ_PASSWORD: rabbit
+      RABBITMQ_SERVER_ADDRESS: rabbitmq
+      RABBITMQ_JOB_EXCHANGE: test-runner-job
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9002/readyz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  test-runner-api:
+    container_name: "test-runner-api"
+    image: ghcr.io/simonpratt/test-runner-api:latest
+    platform: linux/x86_64 # TEMP remove after prisma supports ARM build
+    restart: always
+    ports:
+      - 9000:9000
+      - 9001:9001
+    depends_on:
+      - test-runner-api-migrations
+      - postgres
+      - rabbitmq
+    environment:
+      CORS_ENABLED_URL: http://localhost:3000
+      SERVER_PORT: "9000"
+      SOCKET_PORT: "9001"
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/test_runner?schema=tr_api
+      RABBITMQ_USERNAME: rabbit
+      RABBITMQ_PASSWORD: rabbit
+      RABBITMQ_SERVER_ADDRESS: rabbitmq
+      RABBITMQ_WS_EXCHANGE: test-runner-ws
+      RABBITMQ_JOB_EXCHANGE: test-runner-job
+      SERVICE_NAMESPACE: test-runner
+      SERVICE_NAME: test-runner-api
+      SERVICE_VERSION: docker-environment
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/readyz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  test-runner-client:
+    container_name: "test-runner-client"
+    image: ghcr.io/simonpratt/test-runner-client:latest
+    restart: always
+    platform: linux/amd64
+    ports:
+      - 3000:80
+    depends_on:
+      - test-runner-api
+    environment:
+      VITE_API_URL: http://localhost:9000
+      VITE_WS_URL: ws://localhost:9001
+
+volumes:
+  pgdata:
