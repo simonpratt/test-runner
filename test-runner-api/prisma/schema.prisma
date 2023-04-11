@@ -61,8 +61,7 @@ model EnvironmentVariable {
 
 model DockerImageConfig {
   id           String @id @default(uuid())
-  name         String
   dockerImage  String
-  startCommand String
+  startCommand String?
   Job          Job[]
 }

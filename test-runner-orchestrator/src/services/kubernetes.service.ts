@@ -27,7 +27,7 @@ export const testKubernetesConnection = async () => {
   console.log(response);
 };
 
-const makeJobSpec = (commandId: string, dockerImage: string, command: string) => {
+const makeJobSpec = (commandId: string, dockerImage: string) => {
   return `
 apiVersion: batch/v1
 kind: Job
@@ -39,12 +39,8 @@ spec:
     spec:
       containers:
       - name: test-job-${commandId}
-        image: sample
+        image: ${dockerImage}
         imagePullPolicy: Never
-        command: [${command
-          .split(' ')
-          .map((c) => `"${c}"`)
-          .join(', ')}]
       restartPolicy: Never
   backoffLimit: 1
 `;
@@ -56,14 +52,14 @@ export default {
   async startContainer(config: {
     commandId: string;
     dockerImage: string;
-    command: string;
+    command?: string;
     variables: { name: string; value: string }[];
   }) {
     const { commandId, dockerImage, command, variables } = config;
     console.log(variables);
 
     // Build the spec from the template yaml
-    const kubesSpec = makeJobSpec(commandId, dockerImage, command);
+    const kubesSpec = makeJobSpec(commandId, dockerImage);
     const yaml: V1Job = load(kubesSpec) as any;
 
     // Verify the container to make typescript happy
@@ -71,8 +67,9 @@ export default {
       throw new Error('At least one container expected');
     }
 
-    // Set the environment variables
+    // Set the environment variables and command
     yaml.spec.template.spec.containers[0].env = variables;
+    yaml.spec.template.spec.containers[0].command = command ? command.split(' ') : undefined;
 
     // Create the job in kubernetes
     const result = await client.create(yaml);

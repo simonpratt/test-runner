@@ -12,14 +12,12 @@ const dockerImageRouter = router({
   addDockerImage: publicProcedure
     .input(
       z.object({
-        name: z.string(),
         dockerImage: z.string(),
-        startCommand: z.string(),
+        startCommand: z.string().optional(),
       }),
     )
     .mutation(async ({ input }) => {
       await dockerImageService.addDockerImage({
-        name: input.name,
         dockerImage: input.dockerImage,
         startCommand: input.startCommand,
       });

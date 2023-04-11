@@ -138,7 +138,7 @@ jobs:
           docker buildx build --platform linux/amd64 -t $REGISTRY:$TAG --push -f test-runner-client/Dockerfile .
           docker buildx imagetools create $REGISTRY:$TAG --tag $REGISTRY:latest
 
-  build-sample:
+  build-mock:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

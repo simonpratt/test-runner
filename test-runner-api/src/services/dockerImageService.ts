@@ -1,9 +1,9 @@
 import { prisma } from '../core/prisma.client';
 
 export default {
-  async addDockerImage(config: { name: string; dockerImage: string; startCommand: string }) {
-    const { name, dockerImage, startCommand } = config;
-    await prisma.dockerImageConfig.create({ data: { name, dockerImage, startCommand } });
+  async addDockerImage(config: { dockerImage: string; startCommand?: string }) {
+    const { dockerImage, startCommand } = config;
+    await prisma.dockerImageConfig.create({ data: { dockerImage, startCommand } });
   },
 
   async getDockerImages() {

@@ -3,7 +3,7 @@
   "author": "Simon Pratt (19920260+simonpratt@users.noreply.github.com)",
   "license": "MIT",
   "scripts": {
-    "setup": "npm run ci-all && npm run build --workspace=test-runner-mock && docker build ./test-runner-mock -t sample",
+    "setup": "npm run ci-all && docker build -f test-runner-mock/Dockerfile . -t sample",
     "build-all": "npm run build --workspaces --if-present",
     "install-all": "npm install --workspaces  --if-present",
     "ci-all": "npm ci --workspaces  --if-present",

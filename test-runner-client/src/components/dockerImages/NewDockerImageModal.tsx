@@ -10,9 +10,8 @@ export interface NewDockerImageModalProps {
 
 const NewDockerImageModal = ({ onClose }: NewDockerImageModalProps) => {
   const [form, setForm] = React.useState({
-    name: 'Sample Image',
     dockerImage: 'sample',
-    startCommand: 'node build/start.js',
+    startCommand: '',
   });
   const {
     mutate: addDockerImage,
@@ -36,9 +35,18 @@ const NewDockerImageModal = ({ onClose }: NewDockerImageModalProps) => {
       <Modal.Body>
         <Form value={form} onChange={setForm} onSubmit={handleSubmit}>
           <ControlGroup variation='comfortable'>
-            <Input name='name' label='name' placeholder='test1.js,test2.js,test3.js' />
-            <Input name='dockerImage' label='Docker Image' placeholder='sample' />
-            <Input name='startCommand' label='Start Command' placeholder='node build/start.js' />
+            <Input
+              name='dockerImage'
+              label='Docker Image'
+              placeholder='sample'
+              description='Name of the docker image that runs the tests'
+            />
+            <Input
+              name='startCommand'
+              label='Start Command'
+              placeholder='node build/start.js'
+              description='Start command for the docker container.\nLeave blank to use the default start command for the image'
+            />
             <Button type='submit' loading={addDockerImageLoading}>
               Create
             </Button>

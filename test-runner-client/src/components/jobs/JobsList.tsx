@@ -46,7 +46,7 @@ const JobsList = () => {
             <>
               <Table.Row key={job.id}>
                 <Table.Cell>{job.status}</Table.Cell>
-                <Table.Cell>{dockerImages?.find((img) => img.id === job.dockerImageConfigId)?.name}</Table.Cell>
+                <Table.Cell>{dockerImages?.find((img) => img.id === job.dockerImageConfigId)?.dockerImage}</Table.Cell>
                 <Table.Cell>{environments?.find((env) => env.id === job.environmentId)?.name}</Table.Cell>
                 <Table.Cell>{job.selector}</Table.Cell>
               </Table.Row>

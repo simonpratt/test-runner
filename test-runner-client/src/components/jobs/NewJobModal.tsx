@@ -49,14 +49,16 @@ const NewJobModal = ({ onClose }: NewJobModalProps) => {
 
   const dockerImageSelectOptions =
     dockerImages?.map((dockerImage) => ({
-      label: dockerImage.name,
+      label: dockerImage.startCommand
+        ? `${dockerImage.dockerImage} (${dockerImage.startCommand})`
+        : dockerImage.dockerImage,
       value: dockerImage.id,
     })) || [];
 
   const environmentSelectOptions =
-    environments?.map((dockerImage) => ({
-      label: dockerImage.name,
-      value: dockerImage.id,
+    environments?.map((environment) => ({
+      label: environment.name,
+      value: environment.id,
     })) || [];
 
   return (

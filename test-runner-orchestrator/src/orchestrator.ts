@@ -70,6 +70,8 @@ const startWatchingForFinishedContainers = async () => {
         case 'unknown':
         default:
           console.log(`Container ${container.containerId} has unknown status: ${status}`);
+          containerManagerService.unregisterContainer(container.containerId);
+          await apiConnector.orchestrator.markCommandAborted.mutate({ commandId: container.commandId });
       }
     }
 

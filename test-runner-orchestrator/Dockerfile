@@ -2,8 +2,6 @@ FROM node:18-slim
 
 WORKDIR /usr/app
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
 COPY package.json package.json
 COPY package-lock.json package-lock.json
 

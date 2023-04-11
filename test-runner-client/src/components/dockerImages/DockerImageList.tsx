@@ -21,13 +21,11 @@ const DockerImageList = () => {
         <Spacer size='4x' />
         <Table>
           <Table.Row>
-            <Table.Cell>Name</Table.Cell>
             <Table.Cell>Image</Table.Cell>
             <Table.Cell>Start Command</Table.Cell>
           </Table.Row>
           {dockerImages.map((dockerImage) => (
             <Table.Row key={dockerImage.id}>
-              <Table.Cell>{dockerImage.name}</Table.Cell>
               <Table.Cell>{dockerImage.dockerImage}</Table.Cell>
               <Table.Cell>{dockerImage.startCommand}</Table.Cell>
               <Table.Cell>
