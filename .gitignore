@@ -6,3 +6,4 @@ build/
 generated/
 backup/
 values.yaml
+docker-compose.yml
