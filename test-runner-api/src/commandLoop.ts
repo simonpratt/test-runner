@@ -32,6 +32,7 @@ const emitCommandRun = async (commandId: string) => {
     commandId: command.id,
     dockerImage: command.Job.dockerImageConfig.dockerImage,
     startCommand: command.Job.dockerImageConfig.startCommand || undefined,
+    isLocalImage: command.Job.dockerImageConfig.isLocalImage,
     variables: [
       ...(command.Job.Environment?.EnvironmentVariable.map((v) => ({ name: v.name, value: v.value })) || []),
       { name: 'TEST_SPEC', value: command.spec },

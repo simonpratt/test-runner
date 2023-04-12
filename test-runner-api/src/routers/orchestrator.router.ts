@@ -15,6 +15,9 @@ const orchestratorRouter = router({
   markCommandAborted: publicProcedure.input(z.object({ commandId: z.string() })).mutation(async ({ input }) => {
     await orchestratorService.markCommandAborted(input.commandId);
   }),
+  markCommandFailed: publicProcedure.input(z.object({ commandId: z.string() })).mutation(async ({ input }) => {
+    await orchestratorService.markCommandFailed(input.commandId);
+  }),
 });
 
 export default orchestratorRouter;

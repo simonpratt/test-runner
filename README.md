@@ -6,6 +6,10 @@ Future work could include improvements to the test discovery/selection process, 
 
 ## Usage
 
+Copy the `docker-compose.example.yml` file to `docker-compose.yml` and fill in the appropriate values. Then run `docker-compose up -d` to start the service.
+
+## Development
+
 This project is made up of three main components
 
 *test-runner-api* is the owner of the queue and interacts with both the orchestrator and the client

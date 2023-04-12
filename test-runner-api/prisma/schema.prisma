@@ -23,6 +23,7 @@ enum CommandStatus {
   RUNNING
   FINISHED
   ABORTED
+  FAILED
 }
 
 model Job {
@@ -60,8 +61,9 @@ model EnvironmentVariable {
 }
 
 model DockerImageConfig {
-  id           String @id @default(uuid())
+  id           String  @id @default(uuid())
   dockerImage  String
   startCommand String?
+  isLocalImage Boolean
   Job          Job[]
 }

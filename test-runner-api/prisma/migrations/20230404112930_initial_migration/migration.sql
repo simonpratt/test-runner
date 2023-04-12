@@ -2,7 +2,7 @@
 CREATE TYPE "JobStatus" AS ENUM ('PENDING', 'RUNNING', 'FINISHED');
 
 -- CreateEnum
-CREATE TYPE "CommandStatus" AS ENUM ('PENDING', 'RUNNING', 'FINISHED', 'ABORTED');
+CREATE TYPE "CommandStatus" AS ENUM ('PENDING', 'RUNNING', 'FINISHED', 'ABORTED', 'FAILED');
 
 -- CreateTable
 CREATE TABLE "Job" (
@@ -49,6 +49,7 @@ CREATE TABLE "DockerImageConfig" (
     "name" TEXT NOT NULL,
     "dockerImage" TEXT NOT NULL,
     "startCommand" TEXT NOT NULL,
+    "isLocalImage" BOOLEAN NOT NULL,
 
     CONSTRAINT "DockerImageConfig_pkey" PRIMARY KEY ("id")
 );

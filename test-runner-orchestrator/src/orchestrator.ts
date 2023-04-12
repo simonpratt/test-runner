@@ -19,7 +19,7 @@ export const stopOrchestrator = () => {
 
 const commandRunRoundRobin = new RabbitMqRoundRobin<RabbitMqCommandRunDefinition>(
   environment.RABBITMQ_JOB_EXCHANGE,
-  'test-runner-rr-job-queue',
+  'orchestrator-round-robin-queue',
   'COMMAND.RUN',
 );
 
@@ -32,6 +32,7 @@ const startWatchingForNewJobs = async () => {
       containerId = await kubernetesService.startContainer({
         commandId: command.commandId,
         dockerImage: command.dockerImage,
+        isLocalImage: command.isLocalImage,
         command: command.startCommand,
         variables: command.variables,
       });
@@ -62,6 +63,8 @@ const startWatchingForFinishedContainers = async () => {
           break;
         case 'failed':
           console.log(`Container ${container.containerId} has restarted`);
+          containerManagerService.unregisterContainer(container.containerId);
+          await apiConnector.orchestrator.markCommandFailed.mutate({ commandId: container.commandId });
           break;
         case 'running':
         case 'pending':

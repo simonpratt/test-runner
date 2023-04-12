@@ -15,6 +15,7 @@ export type RabbitMqCommandRunDefinition = {
     commandId: string;
     dockerImage: string;
     startCommand?: string;
+    isLocalImage: boolean;
     variables: { name: string; value: string }[];
   };
 };

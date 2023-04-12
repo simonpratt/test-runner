@@ -27,7 +27,7 @@ export const testKubernetesConnection = async () => {
   console.log(response);
 };
 
-const makeJobSpec = (commandId: string, dockerImage: string) => {
+const makeJobSpec = (commandId: string, dockerImage: string, isLocalImage: boolean) => {
   return `
 apiVersion: batch/v1
 kind: Job
@@ -35,12 +35,13 @@ metadata:
   name: test-job-${commandId}
   namespace: ${environment.KUBERNETES_NAMESPACE}
 spec:
+  ttlSecondsAfterFinished: 120
   template:
     spec:
       containers:
       - name: test-job-${commandId}
         image: ${dockerImage}
-        imagePullPolicy: Never
+        imagePullPolicy: ${isLocalImage ? 'Never' : 'IfNotPresent'}
       restartPolicy: Never
   backoffLimit: 1
 `;
@@ -52,14 +53,15 @@ export default {
   async startContainer(config: {
     commandId: string;
     dockerImage: string;
+    isLocalImage: boolean;
     command?: string;
     variables: { name: string; value: string }[];
   }) {
-    const { commandId, dockerImage, command, variables } = config;
+    const { commandId, dockerImage, isLocalImage, command, variables } = config;
     console.log(variables);
 
     // Build the spec from the template yaml
-    const kubesSpec = makeJobSpec(commandId, dockerImage);
+    const kubesSpec = makeJobSpec(commandId, dockerImage, isLocalImage);
     const yaml: V1Job = load(kubesSpec) as any;
 
     // Verify the container to make typescript happy

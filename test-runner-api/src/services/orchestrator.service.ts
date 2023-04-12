@@ -27,4 +27,10 @@ export default {
 
     await prisma.command.updateMany({ where: { id: commandId }, data: { status: 'ABORTED' } });
   },
+
+  async markCommandFailed(commandId: string) {
+    console.log(`Processing failed command: ${commandId}`);
+
+    await prisma.command.updateMany({ where: { id: commandId }, data: { status: 'FAILED' } });
+  },
 };

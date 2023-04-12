@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { Button, ControlGroup, Form, Input, Modal } from '@dtdot/lego';
+import { Button, ControlGroup, Form, Input, Modal, Select } from '@dtdot/lego';
 
 import { apiConnector } from '../../core/api.connector';
 
@@ -12,6 +12,7 @@ const NewDockerImageModal = ({ onClose }: NewDockerImageModalProps) => {
   const [form, setForm] = React.useState({
     dockerImage: 'sample',
     startCommand: '',
+    isLocalImage: '',
   });
   const {
     mutate: addDockerImage,
@@ -26,8 +27,13 @@ const NewDockerImageModal = ({ onClose }: NewDockerImageModalProps) => {
   }, [addDockerImageSuccess, onClose]);
 
   const handleSubmit = async () => {
-    addDockerImage(form);
+    addDockerImage({ ...form, isLocalImage: form.isLocalImage === 'yes' });
   };
+
+  const isLocalImageOptions = [
+    { label: 'Yes', value: 'yes' },
+    { label: 'No', value: 'no' },
+  ];
 
   return (
     <Modal onClose={onClose}>
@@ -46,6 +52,12 @@ const NewDockerImageModal = ({ onClose }: NewDockerImageModalProps) => {
               label='Start Command'
               placeholder='node build/start.js'
               description='Start command for the docker container.\nLeave blank to use the default start command for the image'
+            />
+            <Select
+              name='isLocalImage'
+              label='Local Image'
+              options={isLocalImageOptions}
+              description='Is the docker image one that was built locally or one that is pulled from a registry?'
             />
             <Button type='submit' loading={addDockerImageLoading}>
               Create

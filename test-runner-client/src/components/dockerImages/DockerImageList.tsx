@@ -23,11 +23,13 @@ const DockerImageList = () => {
           <Table.Row>
             <Table.Cell>Image</Table.Cell>
             <Table.Cell>Start Command</Table.Cell>
+            <Table.Cell>Local Image</Table.Cell>
           </Table.Row>
           {dockerImages.map((dockerImage) => (
             <Table.Row key={dockerImage.id}>
               <Table.Cell>{dockerImage.dockerImage}</Table.Cell>
               <Table.Cell>{dockerImage.startCommand}</Table.Cell>
+              <Table.Cell>{dockerImage.isLocalImage ? 'Yes' : 'No'}</Table.Cell>
               <Table.Cell>
                 <TableAction
                   text='Edit'
