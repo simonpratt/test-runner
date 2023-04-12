@@ -166,8 +166,8 @@ jobs:
           echo $REGISTRY
           echo $TAG
           docker context create multi-arch-build
-          # docker buildx create --use multi-arch-build --platform linux/amd64,linux/arm64
-          # docker buildx build --platform linux/amd64,linux/arm64 -t $REGISTRY:$TAG --push -f test-runner-mock/Dockerfile .
-          docker buildx create --use multi-arch-build --platform linux/amd64
-          docker buildx build --platform linux/amd64 -t $REGISTRY:$TAG --push -f test-runner-mock/Dockerfile .
+          docker buildx create --use multi-arch-build --platform linux/amd64,linux/arm64
+          docker buildx build --platform linux/amd64,linux/arm64 -t $REGISTRY:$TAG --push -f test-runner-mock/Dockerfile .
+          # docker buildx create --use multi-arch-build --platform linux/amd64
+          # docker buildx build --platform linux/amd64 -t $REGISTRY:$TAG --push -f test-runner-mock/Dockerfile .
           docker buildx imagetools create $REGISTRY:$TAG --tag $REGISTRY:latest
