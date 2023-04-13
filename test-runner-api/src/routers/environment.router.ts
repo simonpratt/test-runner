@@ -14,6 +14,7 @@ const environmentRouter = router({
       z.object({
         id: z.string(),
         name: z.string(),
+        concurrencyLimit: z.coerce.number(),
         variables: z.array(z.object({ name: z.string(), value: z.string() })),
       }),
     )
@@ -21,6 +22,7 @@ const environmentRouter = router({
       await environmentService.addEnvironment({
         id: input.id,
         name: input.name,
+        concurrencyLimit: input.concurrencyLimit,
         variables: input.variables,
       });
     }),

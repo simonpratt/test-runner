@@ -1,9 +1,12 @@
 import { prisma } from '../core/prisma.client';
+import { DockerImageConfig } from '../generated/client';
 
 export default {
-  async addDockerImage(config: { dockerImage: string; startCommand?: string; isLocalImage: boolean }) {
-    const { dockerImage, startCommand, isLocalImage } = config;
-    await prisma.dockerImageConfig.create({ data: { dockerImage, startCommand, isLocalImage } });
+  async addDockerImage(
+    config: Pick<DockerImageConfig, 'dockerImage' | 'startCommand' | 'concurrency' | 'isLocalImage'>,
+  ) {
+    const { dockerImage, startCommand, concurrency, isLocalImage } = config;
+    await prisma.dockerImageConfig.create({ data: { dockerImage, startCommand, concurrency, isLocalImage } });
   },
 
   async getDockerImages() {

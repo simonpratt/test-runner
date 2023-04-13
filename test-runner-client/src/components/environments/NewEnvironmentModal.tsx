@@ -15,6 +15,7 @@ const NewEnvironmentModal = ({ onClose }: NewEnvironmentModalProps) => {
     id: 'environment-01',
     name: 'Environment 01',
     variables: 'API_URL: http://xyz.com',
+    concurrencyLimit: 4,
   });
   const {
     mutate: addEnvironment,
@@ -42,8 +43,9 @@ const NewEnvironmentModal = ({ onClose }: NewEnvironmentModalProps) => {
       <Modal.Body>
         <Form value={form} onChange={setForm} onSubmit={handleSubmit}>
           <ControlGroup variation='comfortable'>
-            <Input name='id' label='id' placeholder='environment-01' />
-            <Input name='name' label='name' placeholder='Environment 01' />
+            <Input name='id' label='Id' placeholder='environment-01' />
+            <Input name='name' label='Name' placeholder='Environment 01' />
+            <Input name='concurrencyLimit' label='Concurrency Limit' placeholder='4' />
             <TextArea name='variables' label='Variables' placeholder='API_URL: http://xyz.com' />
             <Button type='submit' loading={addEnvironmentLoading}>
               Create

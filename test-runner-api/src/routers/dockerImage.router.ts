@@ -14,13 +14,15 @@ const dockerImageRouter = router({
       z.object({
         dockerImage: z.string(),
         startCommand: z.string().optional(),
+        concurrency: z.enum(['SINGULAR', 'PARALLEL']),
         isLocalImage: z.boolean(),
       }),
     )
     .mutation(async ({ input }) => {
       await dockerImageService.addDockerImage({
         dockerImage: input.dockerImage,
-        startCommand: input.startCommand,
+        startCommand: input.startCommand || null,
+        concurrency: input.concurrency,
         isLocalImage: input.isLocalImage,
       });
     }),

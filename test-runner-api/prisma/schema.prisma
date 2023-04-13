@@ -26,6 +26,11 @@ enum CommandStatus {
   FAILED
 }
 
+enum ConcurrencyMode {
+  SINGULAR
+  PARALLEL
+}
+
 model Job {
   id                  String            @id @default(uuid())
   selector            String
@@ -48,6 +53,7 @@ model Command {
 model Environment {
   id                  String                @id
   name                String
+  concurrencyLimit    Int
   Job                 Job[]
   EnvironmentVariable EnvironmentVariable[]
 }
@@ -64,6 +70,7 @@ model DockerImageConfig {
   id           String  @id @default(uuid())
   dockerImage  String
   startCommand String?
+  concurrency  ConcurrencyMode
   isLocalImage Boolean
   Job          Job[]
 }

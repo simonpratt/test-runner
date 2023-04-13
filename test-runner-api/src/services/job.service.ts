@@ -23,10 +23,21 @@ export default {
     });
     await rabbitWSPublisher.publish('JOB.CREATE', job);
 
+    const environment = await prisma.environment.findFirst({ where: { id: environmentId } });
+    const dockerImageConfig = await prisma.dockerImageConfig.findFirst({ where: { id: dockerImageConfigId } });
+
     // TODO: Use something pushed from the CI step to break the selector down into actual tests
     //       For now we will just start directly using the selector
     //       Starting directly from the selector would work fine for simple use cases
-    const specs = selector.split(',');
+    let specs: string[] = [];
+    if (dockerImageConfig?.concurrency === 'SINGULAR') {
+      specs = selector.split(',');
+    } else if (dockerImageConfig?.concurrency === 'PARALLEL' && environment?.concurrencyLimit) {
+      specs = [];
+      for (let i = 0; i < environment?.concurrencyLimit; i++) {
+        specs.push(selector);
+      }
+    }
 
     // TODO: Need to bulk insert with pre-defined UUID's so we can bulk grab them again after for the queue publish
     //       Doing this loop will be harsher on the DB
