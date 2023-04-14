@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 
 import { Button, ButtonGroup, Loader, PaddedLayout, Spacer, Table } from '@dtdot/lego';
 
@@ -13,8 +13,8 @@ const JobsList = () => {
   const [showNewJobModal, setShowNewJobModal] = useState(false);
   const { jobs, jobsLoading } = useJobs();
   const { commands, commandsLoading } = useCommands();
-  const { environments, environmentsLoading } = useEnvironments();
-  const { dockerImages, dockerImagesLoading } = useDockerImages();
+  const { environments } = useEnvironments();
+  const { dockerImages } = useDockerImages();
   const { mutate: clearJobs } = apiConnector.job.clearJobs.useMutation();
 
   if (!jobs || jobsLoading) {
@@ -43,8 +43,8 @@ const JobsList = () => {
             <Table.Cell>Selector</Table.Cell>
           </Table.Row>
           {jobs.map((job) => (
-            <>
-              <Table.Row key={job.id}>
+            <Fragment key={job.id}>
+              <Table.Row>
                 <Table.Cell>{job.status}</Table.Cell>
                 <Table.Cell>{dockerImages?.find((img) => img.id === job.dockerImageConfigId)?.dockerImage}</Table.Cell>
                 <Table.Cell>{environments?.find((env) => env.id === job.environmentId)?.name}</Table.Cell>
@@ -60,7 +60,7 @@ const JobsList = () => {
                     <Table.Cell>{command.spec}</Table.Cell>
                   </Table.Row>
                 ))}
-            </>
+            </Fragment>
           ))}
         </Table>
       </PaddedLayout>

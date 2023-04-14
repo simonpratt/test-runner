@@ -13,16 +13,12 @@ type ReducerAction =
 const jobsReducer = (state: Job[], action: ReducerAction) => {
   switch (action.type) {
     case 'SET':
-      console.log('SETTING JOBS');
       return action.jobs;
     case 'CREATED':
-      console.log('CREATING JOB');
       return state.find((s) => s.id === action.job.id) ? state : [...state, action.job];
     case 'UPDATED':
-      console.log('UPDATING JOB', action);
       return state.map((s) => (s.id === action.job.id ? action.job : s));
     case 'DELETED':
-      console.log('DELETING JOB', action);
       return state.filter((s) => s.id !== action.id);
     default:
       console.error('Unexpected action type');

@@ -13,16 +13,12 @@ type ReducerAction =
 const commandsReducer = (state: Command[], action: ReducerAction) => {
   switch (action.type) {
     case 'SET':
-      console.log('SETTING COMMANDS');
       return action.commands;
     case 'CREATED':
-      console.log('CREATING COMMAND');
       return state.find((s) => s.id === action.command.id) ? state : [...state, action.command];
     case 'UPDATED':
-      console.log('UPDATING COMMAND', action);
       return state.map((s) => (s.id === action.command.id ? action.command : s));
     case 'DELETED':
-      console.log('DELETING COMMAND', action);
       return state.filter((s) => s.id !== action.id);
     default:
       console.error('Unexpected action type');
