@@ -15,7 +15,7 @@ const environmentRouter = router({
         id: z.string(),
         name: z.string(),
         concurrencyLimit: z.coerce.number(),
-        variables: z.array(z.object({ name: z.string(), value: z.string() })),
+        variables: z.array(z.object({ name: z.string(), value: z.coerce.string() })),
       }),
     )
     .mutation(async ({ input }) => {
@@ -26,8 +26,28 @@ const environmentRouter = router({
         variables: input.variables,
       });
     }),
+  updateEnvironment: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        concurrencyLimit: z.coerce.number(),
+        variables: z.array(z.object({ name: z.string(), value: z.coerce.string() })),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await environmentService.updateEnvironment({
+        id: input.id,
+        name: input.name,
+        concurrencyLimit: input.concurrencyLimit,
+        variables: input.variables,
+      });
+    }),
   getEnvironments: publicProcedure.query(async () => {
     return environmentService.getEnvironments();
+  }),
+  getEnvironment: publicProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
+    return environmentService.getEnvironment(input.id);
   }),
 });
 

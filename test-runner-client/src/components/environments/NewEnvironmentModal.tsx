@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
 
-import { Button, ControlGroup, Form, Input, Modal, TextArea } from '@dtdot/lego';
+import { Modal } from '@dtdot/lego';
 
 import { load } from 'js-yaml';
 
 import { apiConnector } from '../../core/api.connector';
+import EnvironmentForm, { EnvironmentFormValue } from './EnvironmentForm';
 
 export interface NewEnvironmentModalProps {
   onClose: () => void;
 }
 
 const NewEnvironmentModal = ({ onClose }: NewEnvironmentModalProps) => {
-  const [form, setForm] = React.useState({
+  const [form, setForm] = React.useState<EnvironmentFormValue>({
     id: 'environment-01',
     name: 'Environment 01',
     variables: 'API_URL: http://xyz.com',
@@ -39,19 +40,9 @@ const NewEnvironmentModal = ({ onClose }: NewEnvironmentModalProps) => {
 
   return (
     <Modal onClose={onClose}>
-      <Modal.Header header='New Docker Image' />
+      <Modal.Header header='New Environment' />
       <Modal.Body>
-        <Form value={form} onChange={setForm} onSubmit={handleSubmit}>
-          <ControlGroup variation='comfortable'>
-            <Input name='id' label='Id' placeholder='environment-01' />
-            <Input name='name' label='Name' placeholder='Environment 01' />
-            <Input name='concurrencyLimit' label='Concurrency Limit' placeholder='4' />
-            <TextArea name='variables' label='Variables' placeholder='API_URL: http://xyz.com' />
-            <Button type='submit' loading={addEnvironmentLoading}>
-              Create
-            </Button>
-          </ControlGroup>
-        </Form>
+        <EnvironmentForm value={form} onChange={setForm} onSubmit={handleSubmit} isSaving={addEnvironmentLoading} />
       </Modal.Body>
     </Modal>
   );

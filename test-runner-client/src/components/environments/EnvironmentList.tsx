@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 
-import { Button, Loader, PaddedLayout, Spacer, Table } from '@dtdot/lego';
+import { Alert, Button, Loader, PaddedLayout, Spacer, Table } from '@dtdot/lego';
 import TableAction from '@dtdot/lego/build/components/Table/_TableAction';
 
 import { useEnvironments } from '../../hooks/useEnvironments';
+import EditEnvironmentModal from './EditEnvironmentModal';
 import NewEnvironmentModal from './NewEnvironmentModal';
 
 const EnvironmentList = () => {
   const { environments, environmentsLoading, environmentsError, refetchEnvironments } = useEnvironments();
   const [showNewEnvironmentModal, setShowNewEnvironmentModal] = useState(false);
+  const [editEnvironmentId, setEditEnvironmentId] = useState<string>();
 
   if (!environments || environmentsLoading) {
     return <Loader />;
+  }
+
+  if (environmentsError) {
+    return <Alert variant='danger' message='Error loading environments' />;
   }
 
   return (
@@ -34,7 +40,7 @@ const EnvironmentList = () => {
                 <TableAction
                   text='Edit'
                   onClick={() => {
-                    console.log('Edit...');
+                    setEditEnvironmentId(environment.id);
                   }}
                 />
               </Table.Cell>
@@ -47,6 +53,16 @@ const EnvironmentList = () => {
         <NewEnvironmentModal
           onClose={() => {
             setShowNewEnvironmentModal(false);
+            refetchEnvironments();
+          }}
+        />
+      )}
+
+      {editEnvironmentId && (
+        <EditEnvironmentModal
+          id={editEnvironmentId}
+          onClose={() => {
+            setEditEnvironmentId(undefined);
             refetchEnvironments();
           }}
         />
