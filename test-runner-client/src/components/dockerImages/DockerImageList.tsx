@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 
-import { Button, Loader, PaddedLayout, Spacer, Table } from '@dtdot/lego';
+import { Alert, Button, Loader, PaddedLayout, Spacer, Table } from '@dtdot/lego';
 import TableAction from '@dtdot/lego/build/components/Table/_TableAction';
 
 import { useDockerImages } from '../../hooks/useDockerImages';
+import EditDockerImageModal from './EditDockerImageModal';
 import NewDockerImageModal from './NewDockerImageModal';
 
 const DockerImageList = () => {
   const { dockerImages, dockerImagesLoading, dockerImagesError, refetchDockerImages } = useDockerImages();
   const [showNewDockerImageModal, setShowNewDockerImageModal] = useState(false);
+  const [editDockerImageId, setEditDockerImageId] = useState<string>();
 
   if (!dockerImages || dockerImagesLoading) {
     return <Loader />;
+  }
+
+  if (dockerImagesError) {
+    return <Alert variant='danger' message='Error loading docker images' />;
   }
 
   return (
@@ -34,7 +40,7 @@ const DockerImageList = () => {
                 <TableAction
                   text='Edit'
                   onClick={() => {
-                    console.log('Edit...');
+                    setEditDockerImageId(dockerImage.id);
                   }}
                 />
               </Table.Cell>
@@ -47,6 +53,16 @@ const DockerImageList = () => {
         <NewDockerImageModal
           onClose={() => {
             setShowNewDockerImageModal(false);
+            refetchDockerImages();
+          }}
+        />
+      )}
+
+      {editDockerImageId && (
+        <EditDockerImageModal
+          dockerImageId={editDockerImageId}
+          onClose={() => {
+            setEditDockerImageId(undefined);
             refetchDockerImages();
           }}
         />
