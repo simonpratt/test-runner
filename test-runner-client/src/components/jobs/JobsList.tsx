@@ -52,7 +52,9 @@ const JobsList = () => {
               </Table.Row>
               {commands
                 .filter((command) => command.jobId === job.id)
-                .filter((_, __, array) => array.some((command) => command.status !== 'FINISHED'))
+                .filter((_, __, array) =>
+                  array.some((command) => ['FINISHED', 'FAILED'].includes(command.status) === false),
+                )
                 .map((command) => (
                   <Table.Row key={command.id}>
                     <Table.Cell> - </Table.Cell>
